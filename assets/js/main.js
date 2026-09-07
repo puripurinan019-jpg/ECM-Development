@@ -628,7 +628,7 @@ function setupQuoteCalculator() {
   calculate();
 }
 
-// Contact Form Handler - Real Email Sending to puripurinan019@gmail.com
+// Contact Form Handler - Real Email Sending to ecm2561@gmail.com
 function setupContactForm() {
   const form = document.getElementById('contactForm');
   if (!form) return;
@@ -652,7 +652,7 @@ function setupContactForm() {
     if (submitBtnText) submitBtnText.textContent = 'กำลังส่งข้อความ...';
 
     try {
-      const response = await fetch('https://formsubmit.co/ajax/puripurinan019@gmail.com', {
+      const response = await fetch('https://formsubmit.co/ajax/ecm2561@gmail.com', {
         method: 'POST',
         headers: {
           'Accept': 'application/json'
@@ -661,7 +661,7 @@ function setupContactForm() {
       });
 
       if (response.ok) {
-        showToast(`ส่งข้อความสำเร็จ! ระบบได้ส่งข้อมูลไปยังอีเมล puripurinan019@gmail.com เรียบร้อยแล้ว ขอบคุณครับ คุณ ${name}`);
+        showToast(`ส่งข้อความสำเร็จ! ระบบได้ส่งข้อมูลไปยังอีเมล ecm2561@gmail.com เรียบร้อยแล้ว ขอบคุณครับ คุณ ${name}`);
         form.reset();
       } else {
         // Fallback: regular form submit
