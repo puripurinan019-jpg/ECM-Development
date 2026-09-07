@@ -1,0 +1,726 @@
+# -*- coding: utf-8 -*-
+import os
+
+html_template = """<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECM LTD. | บริษัท อี.ซี.เอ็ม ดีเวลลอปเม้นท์ จำกัด - ผู้เชี่ยวชาญด้านลวดสลิงและอุปกรณ์ยกอุตสาหกรรม</title>
+  <meta name="description" content="บริษัท อี.ซี.เอ็ม ดีเวลลอปเม้นท์ จำกัด (ECM Development LTD.) ผลิต จำหน่าย และขนส่งลวดสลิง สลิงโซ่ สลิงผ้าใบ สลิงกลม ตามขนาด (มม.) และความยาว (เมตร) พร้อมใบรับรองความปลอดภัย">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ecm: {
+              navy: '#0A2540',
+              dark: '#07192C',
+              blue: '#2563EB',
+              hover: '#1D4ED8',
+              light: '#F8FAFC',
+              border: '#E2E8F0'
+            }
+          },
+          fontFamily: {
+            sans: ['Prompt', 'Inter', 'sans-serif'],
+            heading: ['Inter', 'Prompt', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+
+  <!-- 1. Topbar Header (Matching Screenshots) -->
+  <div class="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>Certified lifting equipment - Test certificates with every order | อุปกรณ์ยกมาตรฐานสากล พร้อมใบรับรองทุกชุด</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="tel:+6621234567" class="hover:text-white flex items-center gap-1.5 transition">
+          <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+          <span class="font-medium">+66 (0) 2 123 4567 / 081-987-6543</span>
+        </a>
+        <span class="text-slate-600">|</span>
+        <span class="text-slate-400">จ.-ศ. 08:30 - 17:00 น.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Main Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Brand Logo -->
+        <a href="#home" class="flex items-center gap-3 group">
+          <img src="assets/images/logo.svg" alt="ECM LTD. Logo" class="h-12 w-auto">
+        </a>
+
+        <!-- Desktop Menu (4 Pages) -->
+        <nav class="hidden md:flex items-center gap-8 font-heading text-sm uppercase tracking-wider font-semibold">
+          <a href="#home" class="nav-link text-slate-700 py-2">หน้าแรก (HOME)</a>
+          <a href="#about" class="nav-link text-slate-700 py-2">เกี่ยวกับเรา (ABOUT US)</a>
+          <a href="#products" class="nav-link text-slate-700 py-2">สินค้า (PRODUCTS)</a>
+          <a href="#contact" class="nav-link text-slate-700 py-2">ติดต่อเรา (CONTACT)</a>
+        </nav>
+
+        <!-- Right Quick Action -->
+        <div class="hidden md:flex items-center gap-3">
+          <a href="#contact" onclick="setTimeout(() => document.getElementById('fullName')?.focus(), 200)" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition shadow-sm hover:shadow">
+            ขอใบเสนอราคาด่วน
+          </a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobileMenuBtn" type="button" class="md:hidden p-2.5 rounded-xl text-slate-700 hover:bg-slate-100 transition focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+      </div>
+
+      <!-- Mobile Dropdown Navigation -->
+      <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 py-4 px-2 space-y-2 bg-white">
+        <a href="#home" class="block px-4 py-2.5 rounded-lg text-slate-800 font-semibold hover:bg-slate-50">หน้าแรก (HOME)</a>
+        <a href="#about" class="block px-4 py-2.5 rounded-lg text-slate-800 font-semibold hover:bg-slate-50">เกี่ยวกับเรา (ABOUT US)</a>
+        <a href="#products" class="block px-4 py-2.5 rounded-lg text-slate-800 font-semibold hover:bg-slate-50">สินค้า (PRODUCTS)</a>
+        <a href="#contact" class="block px-4 py-2.5 rounded-lg text-slate-800 font-semibold hover:bg-slate-50">ติดต่อเรา (CONTACT)</a>
+        <div class="pt-2">
+          <a href="#contact" class="block text-center w-full bg-blue-600 text-white py-3 rounded-xl font-bold">ขอใบเสนอราคา</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- PAGE 1: หน้าแรก (HOME) -->
+  <!-- ======================================================== -->
+  <main id="home" class="page-section flex-grow">
+    
+    <!-- Hero Banner (Matching media_1788419968785.png) -->
+    <section class="hero-industrial text-white py-20 lg:py-28 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 bg-blue-900/60 border border-blue-400/30 text-blue-200 text-xs font-bold uppercase tracking-widest px-3.5 py-1.5 rounded-full mb-6 backdrop-blur-sm">
+            <span>LIFTING & RIGGING SPECIALISTS</span>
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight leading-none uppercase mb-6">
+            INDUSTRIAL<br>
+            <span class="text-blue-400">LIFTING SOLUTIONS</span><br>
+            YOU CAN TRUST
+          </h1>
+          <p class="text-slate-300 text-base sm:text-lg leading-relaxed mb-8 font-light">
+            <strong>บริษัท อี.ซี.เอ็ม ดีเวลลอปเม้นท์ จำกัด (ECM Development LTD.)</strong> ผู้เชี่ยวชาญการออกแบบ ผลิต ประกอบ และขนส่งลวดสลิง สลิงโซ่ สลิงผ้าใบ และสลิงกลม ตามขนาดเส้นผ่านศูนย์กลาง (มม.) และความยาว (เมตร) ครบวงจร พร้อมทดสอบแรงดึงจริงและออกใบรับรองมาตรฐานความปลอดภัยทุกชุด
+          </p>
+          <div class="flex flex-wrap items-center gap-4">
+            <a href="#contact" class="bg-white hover:bg-slate-100 text-slate-900 font-bold px-7 py-3.5 rounded-xl transition shadow-lg flex items-center gap-2">
+              <span>ขอใบเสนอราคา (Request a Quote)</span>
+              <svg class="w-4 h-4 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+            <a href="#products" class="bg-slate-800/80 hover:bg-slate-700/90 text-white font-semibold border border-slate-600 px-7 py-3.5 rounded-xl transition backdrop-blur-sm">
+              ชมรายการสินค้า (View Our Products)
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="absolute right-0 top-0 bottom-0 w-1/2 opacity-10 pointer-events-none hidden lg:block">
+        <svg class="w-full h-full" viewBox="0 0 500 500" fill="none">
+          <circle cx="400" cy="250" r="200" stroke="#ffffff" stroke-width="2"/>
+          <circle cx="400" cy="250" r="300" stroke="#ffffff" stroke-width="2" stroke-dasharray="10 10"/>
+          <circle cx="400" cy="250" r="400" stroke="#2563EB" stroke-width="2"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Intro Section: A Sling For Every Load (Matching media_1788419968785.png) -->
+    <section class="py-16 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mb-12">
+          <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 uppercase tracking-tight mb-4">
+            A SLING FOR EVERY LOAD
+          </h2>
+          <p class="text-slate-600 text-lg leading-relaxed">
+            ตั้งแต่สลิงสำเร็จรูปมาตรฐานพร้อมส่ง ไปจนถึงงานสั่งทำพิเศษตามแบบวิศวกรรม (Engineered Assemblies) เราผลิตอุปกรณ์ยกที่ตรงตามความต้องการของงานตรงหน้าคุณอย่างแม่นยำและปลอดภัยสูงสุด
+          </p>
+        </div>
+
+        <!-- Featured Products Grid (Matching media_1788419973528.png) -->
+        <div id="homeFeaturedGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Sling Spec & WLL Calculator Tool -->
+    <section class="py-16 bg-slate-900 text-white relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-5">
+            <div class="inline-flex items-center gap-2 bg-blue-500/20 text-blue-400 text-xs font-bold px-3 py-1 rounded-full mb-3">
+              <span>CALCULATOR TOOL</span>
+            </div>
+            <h2 class="text-3xl font-extrabold font-heading mb-4">
+              โปรแกรมช่วยคำนวณสเปกสลิงและระยะยกเบื้องต้น
+            </h2>
+            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+              เลือกชนิดสลิง ระบุขนาดเส้นผ่านศูนย์กลาง (มม.) และความยาวที่ต้องการ (เมตร) เพื่อประเมินพิกัดการรับน้ำหนักปลอดภัย (Working Load Limit) และน้ำหนักสลิงโดยประมาณ
+            </p>
+            <div class="bg-slate-800/80 rounded-2xl p-5 border border-slate-700 text-xs space-y-2">
+              <div class="text-slate-400 font-semibold">คำแนะนำความปลอดภัย:</div>
+              <p class="text-slate-300">* ค่าการคำนวณนี้เป็นการประเมินเบื้องต้นสำหรับการยกตรง (Straight Lift) และมุมมาตรฐาน กรุณาปรึกษาวิศวกรของ ECM เพื่อคำนวณหน้างานจริง</p>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7">
+            <div class="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-blue-600"></span>
+                ระบุขนาด (มม.) และความยาว (เมตร) ที่ต้องการ
+              </h3>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 uppercase mb-2">ประเภทสลิง</label>
+                  <select id="calcType" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-semibold text-slate-800 focus:outline-blue-600">
+                    <option value="wire">ลวดสลิงเหล็กกล้า (Wire Rope Sling)</option>
+                    <option value="chain">โซ่ยกอัลลอยด์ (Chain Sling G80)</option>
+                    <option value="webbing">สลิงผ้าใบแบน (Flat Webbing Sling)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 uppercase mb-2">รูปแบบจำนวนขา</label>
+                  <select id="calcLegs" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-semibold text-slate-800 focus:outline-blue-600">
+                    <option value="1">1 ขา (Single Leg)</option>
+                    <option value="2">2 ขา (2-Leg Assembly 45°)</option>
+                    <option value="4">4 ขา (4-Leg Assembly 45°)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 uppercase mb-2">ขนาดเส้นผ่านศูนย์กลาง / หน้ากว้าง (มม.)</label>
+                  <input type="number" id="calcDiameter" value="16" min="6" max="300" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-semibold text-slate-800 focus:outline-blue-600">
+                  <span class="text-[11px] text-slate-400 mt-1 block">ตัวอย่าง: 8, 12, 16, 20, 24, 28, 32 มม.</span>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 uppercase mb-2">ความยาวที่ต้องการ (เมตร)</label>
+                  <input type="number" id="calcLength" value="3" min="0.5" max="100" step="0.5" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-semibold text-slate-800 focus:outline-blue-600">
+                  <span class="text-[11px] text-slate-400 mt-1 block">ตัวอย่าง: 1, 2, 3, 5, 6, 10, 15 เมตร</span>
+                </div>
+              </div>
+
+              <!-- Results Display -->
+              <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                  <div class="text-xs font-bold text-blue-900 uppercase">พิกัดรับน้ำหนักปลอดภัย (WLL โดยประมาณ)</div>
+                  <div id="calcResultWll" class="text-3xl font-black text-blue-700">4.20 ตัน (Ton)</div>
+                </div>
+                <div class="text-right sm:border-l sm:border-blue-200 sm:pl-6">
+                  <div class="text-xs font-medium text-slate-500">น้ำหนักสลิงโดยประมาณ</div>
+                  <div id="calcResultWeight" class="text-lg font-bold text-slate-800">2.76 กก.</div>
+                </div>
+              </div>
+
+              <div class="mt-6 flex justify-end">
+                <a href="#contact" onclick="setTimeout(() => { const msg = document.getElementById('enquiryMessage'); if (msg) msg.value = 'สอบถามสเปกจากการคำนวณ:\n- ประเภท: ' + document.getElementById('calcType').value + '\n- ขนาด: ' + document.getElementById('calcDiameter').value + ' มม.\n- ความยาว: ' + document.getElementById('calcLength').value + ' เมตร\n- จำนวนขา: ' + document.getElementById('calcLegs').value + ' ขา\n- พิกัด WLL: ' + document.getElementById('calcResultWll').textContent; }, 200);" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition text-sm flex items-center gap-2">
+                  <span>ส่งสเปกนี้เพื่อขอใบเสนอราคา</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Choose ECM Section -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <h2 class="text-3xl font-extrabold text-slate-900 mb-3">ทำไมต้องเลือก อี.ซี.เอ็ม ดีเวลลอปเม้นท์ (ECM)</h2>
+          <p class="text-slate-600 text-sm">ความปลอดภัยในงานยกคือหัวใจสำคัญสูงสุด สินค้าทุกชิ้นของเราผลิตภายใต้มาตรฐานวิศวกรรมระดับสากล</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
+            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-2xl mb-6">✓</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Proof-Tested 100%</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">สลิงและชุดยกทุกชิ้นผ่านการทดสอบแรงดึงจริงบนแท่นทดสอบ Tensile Test Bed พร้อมออกใบรับรอง Certificate of Conformity ให้ลูกค้าทุกคำสั่งซื้อ</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
+            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-2xl mb-6">⚙️</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Custom Length & Diameter</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">สั่งตัดและประกอบตามขนาดเส้นผ่านศูนย์กลาง (มม.) และความยาว (เมตร) ได้ทุกมิติ พร้อมอุปกรณ์ต่อพ่วงตะขอ ห่วง และสะเก็นคุณภาพสูง</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
+            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-2xl mb-6">🚚</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Fast Delivery & Logistics</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">ระบบสต็อกและบริการขนส่งสลิงที่รวดเร็ว ตรงเวลา จัดส่งถึงหน้างานและไซต์ก่อสร้างทั่วประเทศเพื่อความต่อเนื่องในการทำงานของคุณ</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- PAGE 2: เกี่ยวกับเรา (ABOUT US) -->
+  <!-- ======================================================== -->
+  <section id="about" class="page-section hidden flex-grow">
+    
+    <!-- Hero (Matching media_1788419988187.png) -->
+    <div class="hero-industrial text-white py-20 lg:py-24 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 bg-blue-900/60 border border-blue-400/30 text-blue-200 text-xs font-bold uppercase tracking-widest px-3.5 py-1.5 rounded-full mb-6">
+            <span>ABOUT US</span>
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight uppercase mb-6">
+            BUILT AROUND<br>THE LOAD
+          </h1>
+          <p class="text-slate-300 text-lg leading-relaxed font-light">
+            <strong>บริษัท อี.ซี.เอ็ม ดีเวลลอปเม้นท์ จำกัด (ECM Development LTD.)</strong> คือผู้เชี่ยวชาญด้านอุปกรณ์ยกและขนส่งสลิงอุตสาหกรรม เราผลิต ทดสอบ และสนับสนุนอุปกรณ์สลิงและชุดประกอบยกที่ภาคอุตสาหกรรมไว้วางใจได้ในทุกๆ วัน
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Our Story Section (Matching media_1788419988187.png) -->
+    <div class="py-16 lg:py-24 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Left Text Content -->
+          <div class="lg:col-span-7">
+            <span class="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-2">OUR STORY & MISSION</span>
+            <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 uppercase tracking-tight mb-6">
+              A WORKSHOP MENTALITY,<br>AN ENGINEERING STANDARD
+            </h2>
+            <div class="space-y-4 text-slate-600 text-base leading-relaxed">
+              <p>
+                <strong>จุดมุ่งหมายของบริษัท อี.ซี.เอ็ม ดีเวลลอปเม้นท์ จำกัด</strong> เริ่มต้นจากการมุ่งแก้ไขปัญหาจริงของภาคอุตสาหกรรม: ลูกค้าต้องการอุปกรณ์ยกที่มีคุณภาพสูง จัดส่งรวดเร็ว ขนาดถูกต้องตรงตามการใช้งานจริง และมาพร้อมเอกสารใบรับรองผลการทดสอบ (Test Certificates) ที่ตรวจสอบความถูกต้องได้ 100%
+              </p>
+              <p>
+                วันนี้ เราได้ผสานโรงงานประกอบสลิงที่เพียบพร้อมด้วยเครื่องจักรทันสมัย เข้ากับการสนับสนุนด้านวิศวกรรมเฉพาะทาง ลวดสลิง โซ่ยก สลิงผ้าใบ และสลิงกลมทุกเส้น ได้รับการตัด อัดปลอกไฮดรอลิก (Swaged) และทดสอบแรงดึงจริง (Proof-Tested) ภายใต้หลังคาเดียวกัน — และเมื่องานของลูกค้าต้องการสเปกพิเศษ ทีมงานวิศวกรของเราพร้อมออกแบบและคำนวณชิ้นงานสั่งทำพิเศษ (Custom Lifting Solutions) ให้ตรงจุด
+              </p>
+              <p class="font-medium text-slate-800">
+                ผลลัพธ์คือ คุณจะได้รับผู้ส่งมอบสินค้าที่ทำหน้าที่เสมือนเป็นส่วนหนึ่งของทีมซ่อมบำรุงและวิศวกรรมความปลอดภัยของคุณ ไม่ใช่แค่เพียงผู้ขายสินค้าทั่วไป
+              </p>
+            </div>
+
+            <!-- Key Figures -->
+            <div class="grid grid-cols-3 gap-6 mt-8 pt-8 border-t border-slate-100">
+              <div>
+                <div class="text-3xl font-black text-blue-600">100%</div>
+                <div class="text-xs text-slate-500 font-medium mt-1">Proof Testing Guarantee</div>
+              </div>
+              <div>
+                <div class="text-3xl font-black text-slate-900">6 - 60</div>
+                <div class="text-xs text-slate-500 font-medium mt-1">มม. ขนาดเส้นลวดสลิง</div>
+              </div>
+              <div>
+                <div class="text-3xl font-black text-slate-900">1 - 100+</div>
+                <div class="text-xs text-slate-500 font-medium mt-1">ตัน พิกัดรับน้ำหนัก WLL</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Image Illustration -->
+          <div class="lg:col-span-5">
+            <div class="rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-slate-900">
+              <img src="assets/images/workshop.svg" alt="ECM Workshop & Rigging Facility" class="w-full h-auto object-cover">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Safety & Standards Grid -->
+    <div class="py-16 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-2">QUALITY & RELIABILITY</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mb-4">มาตรฐานความปลอดภัยและความน่าเชื่อถือ</h2>
+          <p class="text-slate-600 text-sm">เรายึดมั่นในมาตรฐานสากล เพื่อให้ผู้ปฏิบัติงานทุกคนทำงานได้อย่างมั่นใจและปลอดภัยสูงสุด</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200">
+            <div class="text-blue-600 font-bold text-lg mb-2">EN 13414-1</div>
+            <h4 class="font-bold text-slate-900 text-sm mb-2">มาตรฐานลวดสลิงเหล็กกล้า</h4>
+            <p class="text-xs text-slate-600">กำหนดมาตรฐานความปลอดภัย Safety Factor 5:1 การอัดปลอก และกระบวนการถักหัวสลิง</p>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-slate-200">
+            <div class="text-blue-600 font-bold text-lg mb-2">EN 818-4</div>
+            <h4 class="font-bold text-slate-900 text-sm mb-2">มาตรฐานโซ่ยก Grade 80/100</h4>
+            <p class="text-xs text-slate-600">ควบคุมคุณภาพโซ่อัลลอยด์อบชุบแข็ง และอุปกรณ์ต่อพ่วง Safety Factor 4:1</p>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-slate-200">
+            <div class="text-blue-600 font-bold text-lg mb-2">EN 1492-1 / 2</div>
+            <h4 class="font-bold text-slate-900 text-sm mb-2">สลิงผ้าใบและสลิงกลม</h4>
+            <p class="text-xs text-slate-600">เส้นใยโพลีเอสเตอร์ 100% พร้อมรหัสสีสากลและค่าความปลอดภัย Safety Factor 7:1</p>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-slate-200">
+            <div class="text-blue-600 font-bold text-lg mb-2">ISO 9001:2015</div>
+            <h4 class="font-bold text-slate-900 text-sm mb-2">ระบบบริหารคุณภาพ</h4>
+            <p class="text-xs text-slate-600">ระบบควบคุมคุณภาพตั้งแต่การรับเข้าวัตถุดิบ การผลิต จนถึงการส่งมอบสินค้า</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- PAGE 3: สินค้า (PRODUCTS - 8 รายการตัวอย่าง) -->
+  <!-- ======================================================== -->
+  <section id="products" class="page-section hidden flex-grow">
+    
+    <!-- Hero (Matching media_1788420018302.png) -->
+    <div class="hero-industrial text-white py-20 lg:py-24 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 bg-blue-900/60 border border-blue-400/30 text-blue-200 text-xs font-bold uppercase tracking-widest px-3.5 py-1.5 rounded-full mb-6">
+            <span>PRODUCTS</span>
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight uppercase mb-6">
+            SLINGS & LIFTING EQUIPMENT
+          </h1>
+          <p class="text-slate-300 text-lg leading-relaxed font-light">
+            กลุ่มผลิตภัณฑ์สลิงและอุปกรณ์ยกครบวงจร ผลิต ประกอบ และทดสอบแรงดึงตามคำสั่งซื้อ พร้อมจัดส่งลวดสลิงในขนาดเส้นผ่านศูนย์กลาง (มม.) และความยาว (เมตร) ตามความต้องการของคุณ พร้อมใบรับรอง Test Certificate ทุกชุด
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products List Section -->
+    <div class="py-16 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-4 border-b border-slate-200">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900">รายการสินค้าตัวอย่าง (8 หมวดหมู่หลัก)</h2>
+            <p class="text-xs text-slate-500 mt-1">คลิกปุ่ม <strong>"อธิบายเพิ่มเติม"</strong> เพื่อดูสเปกขนาด (มม.), ความยาว (เมตร), ตาราง WLL และรายละเอียดเชิงลึก</p>
+          </div>
+          <div class="text-xs bg-white px-3 py-1.5 rounded-xl border border-slate-200 font-semibold text-slate-600">
+            แสดง 8 รายการตัวอย่าง
+          </div>
+        </div>
+
+        <!-- 8 Products Grid Container -->
+        <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Populated by JavaScript with 8 complete items -->
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- PAGE 4: ติดต่อเรา (CONTACT US) -->
+  <!-- ======================================================== -->
+  <section id="contact" class="page-section hidden flex-grow">
+    
+    <!-- Hero -->
+    <div class="hero-industrial text-white py-16 lg:py-20 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 bg-blue-900/60 border border-blue-400/30 text-blue-200 text-xs font-bold uppercase tracking-widest px-3.5 py-1.5 rounded-full mb-4">
+            <span>CONTACT US</span>
+          </div>
+          <h1 class="text-4xl sm:text-5xl font-black font-heading tracking-tight uppercase mb-4">
+            GET IN TOUCH WITH ECM
+          </h1>
+          <p class="text-slate-300 text-base leading-relaxed font-light">
+            ติดต่อฝ่ายขายและวิศวกรรม บริษัท อี.ซี.เอ็ม ดีเวลลอปเม้นท์ จำกัด เพื่อขอใบเสนอราคา ปรึกษาสเปกสลิง มม./เมตร หรือนัดหมายเข้าชมโรงงาน
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form & Company Details (Matching media_1788420039103.png) -->
+    <div class="py-16 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          
+          <!-- Left Column: Send Us A Message Form -->
+          <div class="lg:col-span-7">
+            <div class="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-sm">
+              <h2 class="text-2xl sm:text-3xl font-black font-heading text-slate-900 uppercase tracking-tight mb-8">
+                SEND US A MESSAGE
+              </h2>
+
+              <form id="contactForm" class="space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-2">
+                      Full name / ชื่อ-นามสกุล <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="fullName" required placeholder="นายสมชาย มั่นคง" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:outline-blue-600 transition">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-2">
+                      Company / ชื่อบริษัทหรือหน่วยงาน
+                    </label>
+                    <input type="text" id="companyName" placeholder="บริษัท อุตสาหกรรมไทย จำกัด" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:outline-blue-600 transition">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-2">
+                      Email / อีเมลติดต่อ <span class="text-red-500">*</span>
+                    </label>
+                    <input type="email" id="emailAddress" required placeholder="somchai@company.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:outline-blue-600 transition">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-2">
+                      Phone / เบอร์โทรศัพท์ติดต่อ <span class="text-red-500">*</span>
+                    </label>
+                    <input type="tel" id="phoneNumber" required placeholder="081-234-5678" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:outline-blue-600 transition">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase mb-2">
+                    Enquiry about / เรื่องที่ต้องการติดต่อ
+                  </label>
+                  <select id="enquirySubject" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:outline-blue-600 transition font-medium">
+                    <option value="quote">ขอใบเสนอราคาสลิง (Request a Quote)</option>
+                    <option value="spec">สอบถามสเปกขนาด (มม.) และความยาว (เมตร)</option>
+                    <option value="custom">งานสั่งทำพิเศษ (Custom Lifting Solutions)</option>
+                    <option value="cert">ขอใบรับรองการทดสอบ (Test Certificates)</option>
+                    <option value="general">ติดต่อสอบถามทั่วไป (General enquiry)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase mb-2">
+                    Message / รายละเอียดงาน (ระบุน้ำหนักยก, ขนาด มม., ความยาว เมตร, จำนวน) <span class="text-red-500">*</span>
+                  </label>
+                  <textarea id="enquiryMessage" rows="5" required placeholder="ระบุน้ำหนักของชิ้นงาน (ตัน), ขนาดเส้นผ่านศูนย์กลาง (มม.), ความยาว (เมตร), จุดยึดยก, สภาพแวดล้อมหน้างาน..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm focus:bg-white focus:outline-blue-600 transition"></textarea>
+                </div>
+
+                <button type="submit" class="w-full sm:w-auto bg-[#0A2540] hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                  <span>Send Enquiry / ส่งข้อความ</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Right Column: Company Details, Business Hours & QR Code (Matching media_1788420039103.png) -->
+          <div class="lg:col-span-5 space-y-6">
+            
+            <!-- COMPANY DETAILS Card -->
+            <div class="bg-[#0A2540] text-white rounded-3xl p-8 shadow-md border border-slate-800">
+              <h3 class="text-lg font-bold font-heading uppercase tracking-wider mb-6 text-slate-100">
+                COMPANY DETAILS
+              </h3>
+              
+              <div class="space-y-5 text-sm">
+                <div class="flex items-start gap-3.5">
+                  <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                  </div>
+                  <div>
+                    <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">PHONE / เบอร์โทรติดต่อ</div>
+                    <div class="font-medium text-slate-100 text-base mt-0.5">+66 (0) 2 123 4567</div>
+                    <div class="text-xs text-slate-400">Hotline: 081-987-6543, 089-123-4567</div>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3.5">
+                  <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                  </div>
+                  <div>
+                    <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">EMAIL</div>
+                    <div class="font-medium text-slate-100 mt-0.5">sales@ecmdevelopment.com</div>
+                    <div class="text-xs text-slate-400">info@ecmdevelopment.com</div>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3.5">
+                  <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                  </div>
+                  <div>
+                    <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">ADDRESS / ที่อยู่บริษัท</div>
+                    <div class="font-medium text-slate-100 mt-0.5 leading-relaxed">
+                      บริษัท อี.ซี.เอ็ม ดีเวลลอปเม้นท์ จำกัด<br>
+                      (E.C.M. DEVELOPMENT CO., LTD.)<br>
+                      88/9 หมู่ที่ 4 นิคมอุตสาหกรรมบางปู ตำบลบางปูใหม่ อำเภอเมืองสมุทรปราการ จังหวัดสมุทรปราการ 10280
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- BUSINESS HOURS Card (Exact specifications as requested) -->
+            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+              <h3 class="text-lg font-bold font-heading uppercase tracking-wider text-slate-900 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>BUSINESS HOURS / เวลาทำงาน</span>
+              </h3>
+              
+              <div class="space-y-3 text-sm divide-y divide-slate-100">
+                <div class="flex justify-between items-center pt-2">
+                  <span class="text-slate-600 font-medium">วันจันทร์ ถึง วันศุกร์ (Mon - Fri)</span>
+                  <span class="font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded-lg">08:30 - 17:00 น.</span>
+                </div>
+                <div class="flex justify-between items-center pt-3">
+                  <span class="text-slate-600 font-medium">วันเสาร์ - วันอาทิตย์ (Sat - Sun)</span>
+                  <span class="font-bold text-red-600 bg-red-50 px-3 py-1 rounded-lg">Closed (ปิดทำการ)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- QR CODE Card (Exact as requested) -->
+            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm text-center">
+              <h3 class="text-lg font-bold font-heading uppercase tracking-wider text-slate-900 mb-2">
+                LINE OFFICIAL & QR CODE
+              </h3>
+              <p class="text-xs text-slate-500 mb-4">สแกน QR Code เพื่อแอดไลน์สอบถามราคาด่วน ส่งสเปก หรือส่งรูปหน้างาน</p>
+              
+              <div class="flex justify-center mb-4">
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl shadow-inner inline-block">
+                  <img src="assets/images/qr-code.svg" alt="LINE QR Code ECM Development" class="w-44 h-44 object-contain">
+                </div>
+              </div>
+              <div class="inline-flex items-center gap-2 text-sm font-bold text-emerald-600 bg-emerald-50 px-4 py-1.5 rounded-full">
+                <span>LINE ID: @ecmdevelopment</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: Detailed Product View (อธิบายเพิ่มเติม) -->
+  <!-- ======================================================== -->
+  <div id="productDetailModal" class="fixed inset-0 z-50 hidden modal-backdrop items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative my-8 max-h-[90vh] flex flex-col">
+      
+      <!-- Modal Header Bar -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+          <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">รายละเอียดสินค้าเชิงลึก (Specification Details)</span>
+        </div>
+        <button onclick="closeProductModal()" class="w-8 h-8 rounded-full bg-white text-slate-400 hover:text-slate-800 flex items-center justify-center border border-slate-200 hover:bg-slate-100 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div id="modalProductDetails" class="p-6 sm:p-8 overflow-y-auto">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Footer -->
+  <footer class="bg-slate-950 text-slate-400 text-sm mt-auto border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        
+        <!-- Col 1: About ECM -->
+        <div class="space-y-4">
+          <div class="bg-white p-2 rounded-xl inline-block">
+            <img src="assets/images/logo.svg" alt="ECM Logo" class="h-9 w-auto">
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            บริษัท อี.ซี.เอ็ม ดีเวลลอปเม้นท์ จำกัด ผู้เชี่ยวชาญด้านการผลิต จำหน่าย และขนส่งลวดสลิง สลิงโซ่ สลิงผ้าใบ และอุปกรณ์ริกกิ้งสำหรับงานยกอุตสาหกรรมในทุกขนาด มม. และความยาว เมตร
+          </p>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div>
+          <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4">เมนูนำทาง</h4>
+          <ul class="space-y-2.5 text-xs">
+            <li><a href="#home" class="hover:text-blue-400 transition">หน้าแรก (Home)</a></li>
+            <li><a href="#about" class="hover:text-blue-400 transition">เกี่ยวกับเรา (About Us)</a></li>
+            <li><a href="#products" class="hover:text-blue-400 transition">สินค้าและอุปกรณ์ยก (Products)</a></li>
+            <li><a href="#contact" class="hover:text-blue-400 transition">ติดต่อเรา & ขอใบเสนอราคา (Contact)</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Product Types -->
+        <div>
+          <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4">ประเภทสลิง</h4>
+          <ul class="space-y-2.5 text-xs">
+            <li><a href="#products" class="hover:text-blue-400 transition">สลิงลวดเหล็กกล้า (Wire Rope Slings)</a></li>
+            <li><a href="#products" class="hover:text-blue-400 transition">สลิงโซ่ยก Grade 80 & 100</a></li>
+            <li><a href="#products" class="hover:text-blue-400 transition">สลิงผ้าใบแบน (Flat Webbing Slings)</a></li>
+            <li><a href="#products" class="hover:text-blue-400 transition">สลิงกลม (Endless Round Slings)</a></li>
+            <li><a href="#products" class="hover:text-blue-400 transition">สายรัดขนส่ง (Ratchet Tie-Down)</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Contact & Hours -->
+        <div>
+          <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4">เวลาทำการและติดต่อ</h4>
+          <p class="text-xs text-slate-300 leading-relaxed mb-2">
+            <strong>วันจันทร์ - ศุกร์:</strong> 08:30 - 17:00 น.<br>
+            <strong>วันเสาร์ - อาทิตย์:</strong> Closed (ปิดทำการ)
+          </p>
+          <p class="text-xs text-slate-400 mb-3">
+            โทร: +66 (0) 2 123 4567<br>
+            Email: sales@ecmdevelopment.com
+          </p>
+          <a href="#contact" class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition">
+            ติดต่อเราทันที
+          </a>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+        <p>© 2026 บริษัท อี.ซี.เอ็ม ดีเวลลอปเม้นท์ จำกัด (E.C.M. DEVELOPMENT CO., LTD.). All rights reserved.</p>
+        <p class="text-slate-400">Lifting & Rigging Specialists • Industrial Safety First</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
+"""
+
+# Write index.html
+with open('index.html', 'w', encoding='utf-8') as f:
+    f.write(html_template.strip())
+print("Generated index.html successfully.")
+
+# Create standalone pages (about.html, products.html, contact.html) with auto redirect/hash
+pages = {
+    'about.html': 'about',
+    'products.html': 'products',
+    'contact.html': 'contact'
+}
+
+for filename, target in pages.items():
+    page_html = f"""<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=index.html#{target}">
+  <title>ECM LTD. - Redirecting...</title>
+</head>
+<body>
+  <script>window.location.replace("index.html#{target}");</script>
+  <p>กำลังนำทางไปยัง <a href="index.html#{target}">index.html#{target}</a>...</p>
+</body>
+</html>"""
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(page_html.strip())
+    print(f"Generated {filename} redirect page.")

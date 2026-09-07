@@ -1,0 +1,128 @@
+/* Custom Style Enhancements for ECM LTD. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Prompt:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --ecm-navy: #0A2540;
+  --ecm-navy-dark: #07192C;
+  --ecm-blue: #2563EB;
+  --ecm-blue-hover: #1D4ED8;
+  --ecm-light-bg: #F8FAFC;
+  --ecm-border: #E2E8F0;
+  --ecm-text-dark: #0F172A;
+  --ecm-text-muted: #64748B;
+}
+
+body {
+  font-family: 'Prompt', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--ecm-text-dark);
+  background-color: var(--ecm-light-bg);
+  scroll-behavior: smooth;
+}
+
+.font-heading {
+  font-family: 'Inter', 'Prompt', sans-serif;
+}
+
+/* Hero gradient with subtle industrial grid */
+.hero-industrial {
+  background: linear-gradient(135deg, rgba(10, 37, 64, 0.96) 0%, rgba(7, 25, 44, 0.98) 100%),
+              radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.25) 0%, transparent 60%);
+  background-size: cover;
+  background-position: center;
+}
+
+.nav-link {
+  transition: all 0.2s ease;
+  position: relative;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #2563EB;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #2563EB;
+  border-radius: 2px;
+}
+
+/* Card hover animation */
+.product-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 25px -5px rgba(10, 37, 64, 0.1), 0 8px 10px -6px rgba(10, 37, 64, 0.06);
+}
+
+/* Modal transition */
+.modal-backdrop {
+  background-color: rgba(10, 37, 64, 0.75);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.25s ease;
+}
+
+/* Table styling for specs */
+.spec-table th {
+  background-color: #0A2540;
+  color: #ffffff;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.spec-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #E2E8F0;
+  font-size: 0.9rem;
+}
+
+.spec-table tr:nth-child(even) td {
+  background-color: #F8FAFC;
+}
+
+.spec-table tr:hover td {
+  background-color: #EFF6FF;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
+}
+
+/* Toast alert notification */
+.toast-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast-notification.show {
+  transform: translateY(0);
+  opacity: 1;
+}
